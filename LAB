@@ -1,0 +1,91 @@
+--13 Определите функцию, которая, чередует элементы списков (a b...) и (1 2...),
+-- и образует новый список (a 1 b 2 ...).
+
+onc :: [a] -> [a] -> [a]
+conc (x:[]) lst2 = x : lst2
+conc (x:xs) (y:[]) = x : y : xs
+conc (x:xs) (y:ys) = x : y : conc xs ys
+main = do
+    print(conc [1, 1, 1] [2, 3, 4])
+    print(conc [1, 1, 1] [2, 3])
+    print(conc [1, 1] [2, 3, 4])
+    print(conc ["a", "b", "c"] ["d", "e", "f"])
+
+--16 Определите предикат МНОЖЕСТВО-Р, который проверяет, является ли список
+--множеством, т.е. входит ли каждый элемент в список лишь один раз
+
+find x [] = False
+find n (x:xs) =
+  if x == n 
+    then True
+  else find n xs
+
+isSet (x:[]) = True
+isSet (x:xs) = 
+    if find x xs == True 
+        then False
+    else isSet xs
+
+main = do
+    print(isSet [1, 1, 1])
+    print(isSet [1, 2, 3])
+    print(isSet ["a", "b", "c"])
+    print(isSet ["a", "a", "a"])
+
+-- 18 Определите предикат РАВЕНСТВО-МНОЖЕСТВ, проверяющий совпадение двух мно-
+--жеств (независимо от порядка следования элементов). Подсказка: напишите
+--функцию УДАЛИТЬ, удаляющую данный элемент из множества. 
+
+removeItem :: Int -> [Int] -> [Int]
+removeItem _ [] = []
+removeItem x (y:ys) = 
+    if x == y 
+        then ys
+    else y : (removeItem x ys)
+
+check :: [Int] -> [Int] -> Bool
+check (x:[]) (y:[]) = if x == y then True else False
+check [] _ = False
+check _ [] = False
+check (x:xs) lst =
+    check xs (removeItem x lst)
+
+main = do
+    print (check [1, 2, 3] [1, 2, 3])
+    print (check [1, 1, 1] [1])
+    print (check [123, 1, 1] [123, 2, 1, 1])
+
+--22 Определите функцию  ОБЪДИНЕНИЕ, формирующую объединение двух множеств.
+removeItem _ [] = []
+removeItem x (y:ys) = 
+    if x == y 
+        then removeItem x ys
+    else y : (removeItem x ys)
+
+removeAll _ [] = []
+removeAll [] lst = lst
+removeAll (x:xs) lst2 = removeAll xs (removeItem x lst2)
+
+makeSet :: [Int] -> [Int] -> [Int]
+makeSet lst1 lst2 = 
+    lst1 ++ (removeAll lst1 lst2)
+main = do
+    print (makeSet [1, 2, 3] [1, 3, 4, 5])
+    print (makeSet [1, 2, 3] [1, 2, 3])
+    print (makeSet [1, 2] [3, 4])
+    
+    --24 Определите функцию  РАЗНОСТЬ, формирующую разность двух множеств.
+removeItem _ [] = []
+removeItem x (y:ys) = 
+    if x == y 
+        then ys
+    else y : (removeItem x ys)
+
+removeAll [] _ = []
+removeAll lst [] = lst
+removeAll lst2 (x:xs) = removeAll (removeItem x lst2) xs 
+
+main = do
+    print (removeAll [1, 2, 3] [1, 3, 4, 5])
+    print (removeAll [1, 2, 3] [1, 2, 3])
+    print (removeAll [1, 2, 3] [4, 5, 6])
